@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						 http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+						http://cxf.apache.org/jaxrs 
+						http://cxf.apache.org/schemas/jaxrs.xsd">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<!-- API V2 -->
+	<jaxrs:server id="accountServicev2" address="/account">
+		<jaxrs:serviceBeans>
+			<ref bean="accountBeanv2" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<ref bean="jsonProvider" />
+			<ref bean="KhcInvalidMapper" />
+			<ref bean="KhcNotFoundMapper" />
+			<ref bean="FileNotFoundMapper" />
+			<ref bean="AccessDeniedMapper" />
+		</jaxrs:providers>
+	</jaxrs:server>
+
+	<jaxrs:server id="groupServicev2" address="/group">
+		<jaxrs:serviceBeans>
+			<ref bean="groupBeanv2" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<ref bean="jsonProvider" />
+			<ref bean="KhcInvalidMapper" />
+			<ref bean="KhcNotFoundMapper" />
+			<ref bean="FileNotFoundMapper" />
+			<ref bean="AccessDeniedMapper" />
+		</jaxrs:providers>
+	</jaxrs:server>
+
+	<jaxrs:server id="userServicev2" address="/user">
+		<jaxrs:serviceBeans>
+			<ref bean="userBeanv2" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<ref bean="jsonProvider" />
+			<ref bean="KhcInvalidMapper" />
+			<ref bean="KhcNotFoundMapper" />
+			<ref bean="FileNotFoundMapper" />
+			<ref bean="AccessDeniedMapper" />
+		</jaxrs:providers>
+	</jaxrs:server>
+
+	<jaxrs:server id="passwordServicev2" address="/password">
+		<jaxrs:serviceBeans>
+			<ref bean="passwordBeanv2" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<ref bean="jsonProvider" />
+			<ref bean="KhcInvalidMapper" />
+			<ref bean="KhcNotFoundMapper" />
+			<ref bean="FileNotFoundMapper" />
+			<ref bean="AccessDeniedMapper" />
+		</jaxrs:providers>
+	</jaxrs:server>
+
+	<jaxrs:server id="channelServicev2" address="/channel">
+		<jaxrs:serviceBeans>
+			<ref bean="channelBeanv2" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<ref bean="jsonProvider" />
+			<ref bean="KhcInvalidMapper" />
+			<ref bean="KhcNotFoundMapper" />
+			<ref bean="FileNotFoundMapper" />
+			<ref bean="AccessDeniedMapper" />
+		</jaxrs:providers>
+	</jaxrs:server>
+
+	<jaxrs:server id="subscriptionServicev2" address="/subscription">
+		<jaxrs:serviceBeans>
+			<ref bean="subscriptionBeanv2" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<ref bean="jsonProvider" />
+			<ref bean="KhcInvalidMapper" />
+			<ref bean="KhcNotFoundMapper" />
+			<ref bean="FileNotFoundMapper" />
+			<ref bean="AccessDeniedMapper" />
+		</jaxrs:providers>
+	</jaxrs:server>
+
+	<jaxrs:server id="commandServicev2" address="/command">
+		<jaxrs:serviceBeans>
+			<ref bean="commandBeanv2" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<ref bean="jsonProvider" />
+			<ref bean="KhcInvalidMapper" />
+			<ref bean="KhcNotFoundMapper" />
+			<ref bean="FileNotFoundMapper" />
+			<ref bean="AccessDeniedMapper" />
+		</jaxrs:providers>
+	</jaxrs:server>
+
+	<jaxrs:server id="messageServicev2" address="/message">
+		<jaxrs:serviceBeans>
+			<ref bean="messageBeanv2" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<ref bean="jsonProvider" />
+			<ref bean="KhcInvalidMapper" />
+			<ref bean="KhcNotFoundMapper" />
+			<ref bean="FileNotFoundMapper" />
+			<ref bean="AccessDeniedMapper" />
+		</jaxrs:providers>
+	</jaxrs:server>
+
+	<!-- Service beans -->
+	<bean id="accountBeanv2" class="com.kurento.khc.rest.v2.AccountRestfulService" />
+	<bean id="groupBeanv2" class="com.kurento.khc.rest.v2.GroupRestfulService" />
+	<bean id="userBeanv2" class="com.kurento.khc.rest.v2.UserRestfulService" />
+	<bean id="passwordBeanv2" class="com.kurento.khc.rest.v2.PasswordRestfulService" />
+	<bean id="channelBeanv2" class="com.kurento.khc.rest.v2.ChannelRestfulService" />
+	<bean id="subscriptionBeanv2" class="com.kurento.khc.rest.v2.SubscriptionRestfulService" />
+	<bean id="commandBeanv2" class="com.kurento.khc.rest.v2.CommandRestfulService" />
+	<bean id="messageBeanv2" class="com.kurento.khc.rest.v2.MessageRestfulService" />
+
+
+	<!-- Mappers -->
+	<bean id="KhcInvalidMapper" class="com.kurento.khc.KhcInvalidDataExceptionMapper" />
+	<bean id="KhcNotFoundMapper" class="com.kurento.khc.KhcNotFoundExceptionMapper" />
+	<bean id="FileNotFoundMapper" class="com.kurento.khc.FileNotFoundExceptionMapper" />
+	<bean id="AccessDeniedMapper" class="com.kurento.khc.AccessDeniedExceptionMapper" />
+
+	<!-- Providers -->
+	<bean id="agendaMapper" class="com.kurento.khc.jackson.KhcObjectMapper" />
+	<bean id="jsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider">
+		<constructor-arg ref="agendaMapper" />
+	</bean>
+
+</beans>

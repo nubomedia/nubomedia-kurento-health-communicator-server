@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.naevatec.kc</groupId>
+		<artifactId>parent-pom</artifactId>
+		<version>2.4.3-SNAPSHOT</version>
+		<relativePath>parent-pom</relativePath>
+	</parent>
+
+	<artifactId>kc</artifactId>
+	<packaging>pom</packaging>
+
+	<name>Kurento Communicator</name>
+	<description>Reactor project for Kurento Communicator</description>
+	<url>TO-DO</url>
+
+	<scm>
+		<url>${kc.scm.url}</url>
+		<connection>scm:git:${kc.scm.connection}</connection>
+		<developerConnection>scm:git:${kc.scm.connection}</developerConnection>
+		<tag>develop</tag>
+	</scm>
+
+	<properties>
+		<main.basedir>${project.basedir}</main.basedir>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>parent-pom</module>
+				<module>kc-server</module>
+			</modules>
+		</profile>
+	</profiles>
+</project>

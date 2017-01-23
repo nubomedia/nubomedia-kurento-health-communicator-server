@@ -1,0 +1,41 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                    http://www.springframework.org/schema/security
+                    http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<http use-expressions="true" create-session="ifRequired"
+		entry-point-ref="digestEntryPoint">
+
+		<intercept-url pattern="/v2/password/**" access="permitAll" />
+		<intercept-url pattern="/v2/account/**" access="permitAll" />
+		<intercept-url pattern="/sync/**" access="permitAll"/>
+
+		<!-- Most specific first as they come in order -->
+		<intercept-url pattern="/**" access="isAuthenticated()" />
+		
+		<!-- Be careful to place filter in apropriate place -->
+		<custom-filter ref="digestFilter" after="BASIC_AUTH_FILTER" />
+	</http>
+
+	<beans:bean id="agenda-user-service"
+		class="com.kurento.khc.security.KhcUserDetailsService" />
+
+	<beans:bean id="digestFilter"
+		class="org.springframework.security.web.authentication.www.DigestAuthenticationFilter">
+		<beans:property name="userDetailsService" ref="agenda-user-service" />
+		<beans:property name="authenticationEntryPoint" ref="digestEntryPoint" />
+	</beans:bean>
+
+	<beans:bean id="digestEntryPoint"
+		class="org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint">
+		<beans:property name="realmName" value="KurentoAgenda" />
+		<beans:property name="key" value="agenda" />
+	</beans:bean>
+
+	<authentication-manager>
+		<authentication-provider user-service-ref="agenda-user-service" />
+	</authentication-manager>
+
+</beans:beans>

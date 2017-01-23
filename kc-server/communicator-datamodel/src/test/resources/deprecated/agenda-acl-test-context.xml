@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd     
+                    http://www.springframework.org/schema/security
+          			http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<!-- Declare an acl cache -->
+	<bean id="aclCache"
+		class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
+		<constructor-arg>
+			<bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+				<property name="cacheManager">
+					<bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" />
+				</property>
+				<!-- Randomize Acl cache filemane to avoid similtaneous access issues 
+					between different apps -->
+				<property name="cacheName"
+					value="#{ T(java.lang.Math).random() * 100.0 + 'aclCache'}" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="aclAuthorizationStrategy"
+		class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
+		<constructor-arg>
+			<list>
+				<bean
+					class="org.springframework.security.core.authority.GrantedAuthorityImpl">
+					<constructor-arg value="ROLE_SERVER" />
+				</bean>
+				<bean
+					class="org.springframework.security.core.authority.GrantedAuthorityImpl">
+					<constructor-arg value="ROLE_SERVER" />
+				</bean>
+				<bean
+					class="org.springframework.security.core.authority.GrantedAuthorityImpl">
+					<constructor-arg value="ROLE_SERVER" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<!-- Declare an audit logger -->
+	<bean id="auditLogger"
+		class="org.springframework.security.acls.domain.ConsoleAuditLogger" />
+
+	<bean id="agendaPermissionFactory" class="com.kurento.agenda.security.AgendaPermissionFactory" />
+
+	<!-- Declare a lookup strategy -->
+	<bean id="lookupStrategy"
+		class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg ref="aclCache" />
+		<constructor-arg ref="aclAuthorizationStrategy" />
+		<constructor-arg ref="auditLogger" />
+		<property name="permissionFactory" ref="agendaPermissionFactory" />
+	</bean>
+
+	<!-- Declare an acl service -->
+	<bean class="org.springframework.security.acls.jdbc.JdbcMutableAclService"
+		id="springAclService">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg ref="lookupStrategy" />
+		<constructor-arg ref="aclCache" />
+	<!-- <property name="classIdentityQuery" value="${kurento.aclservice.groupidentityquery}" 
+		/> -->
+	<!-- <property name="sidIdentityQuery" value="${kurento.aclservice.sididentityquery}" 
+		/> -->
+	</bean>
+
+	<!-- Declare custom ObjectIdentityRetrievalStrategy -->
+	<bean id="agendaOIRetrievalStrategy"
+		class="com.kurento.agenda.security.AgendaObjectIdentityRetrievalStrategyImpl" />
+
+	<!-- Declare a custom PermissionEvaluator We'll rely on the standard AclPermissionEvaluator 
+		implementation -->
+	<bean class="org.springframework.security.acls.AclPermissionEvaluator"
+		id="permissionEvaluator">
+		<constructor-arg ref="springAclService" />
+		<property name="permissionFactory" ref="agendaPermissionFactory" />
+		<property name="objectIdentityRetrievalStrategy" ref="agendaOIRetrievalStrategy" />
+	</bean>
+
+	<!-- See 15.3.2 Built-In Expression @http://static.springsource.org/spring-security/site/docs/3.0.x/reference/el-access.html#el-permission-evaluator -->
+	<bean id="expressionHandler"
+		class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+		<!-- To use hasPermission() in expressions, configure a PermissionEvaluator -->
+		<property name="permissionEvaluator" ref="permissionEvaluator" />
+	</bean>
+
+	<!-- Enables Method Security and Expression-based access control -->
+	<security:global-method-security
+		pre-post-annotations="enabled">
+		<!-- Enables custom expression handler -->
+		<security:expression-handler ref="expressionHandler" />
+	</security:global-method-security>
+
+</beans>

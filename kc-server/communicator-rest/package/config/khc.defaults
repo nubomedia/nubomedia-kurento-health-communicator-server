@@ -1,0 +1,17 @@
+# Defaults for kurento communicator
+# sourced by /etc/init.d/khc
+# installed at /etc/default/khc by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+#commment the next line to not allow the init.d script to start kurento server
+
+START_DAEMON=false
+
+# Default daemon user
+DAEMON_USER=nobody
+
+# Default service port
+SERVER_PORT=8080

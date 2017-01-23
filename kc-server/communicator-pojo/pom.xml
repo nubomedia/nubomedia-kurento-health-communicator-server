@@ -1,0 +1,123 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.naevatec.kc</groupId>
+		<artifactId>kc-server</artifactId>
+		<version>2.4.3-SNAPSHOT</version>
+	</parent>
+	
+	<artifactId>communicator-pojo</artifactId>
+	<packaging>jar</packaging>
+
+	<scm>
+		<url>${kc.scm.url}</url>
+		<connection>scm:git:${kc.scm.connection}</connection>
+		<developerConnection>scm:git:${kc.scm.connection}</developerConnection>
+		<tag>develop</tag>
+	</scm>
+
+	<name>Communicator Pojos for non jpa systems</name>
+	<description>Datamodel objects intended to interact with Communicator services</description>
+
+	<developers>
+		<developer>
+			<id>jcaden</id>
+			<name>José Antonio Santos</name>
+		</developer>
+		<developer>
+			<id>fjlopez</id>
+			<name>Javier Lopez Fernandez</name>
+		</developer>
+	</developers>
+
+	<dependencies>
+		<!-- JSON library -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-xc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-jaxrs</artifactId>
+		</dependency>
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${version.maven-compiler-plugin}</version>
+				<executions>
+					<execution>
+						<id>Java7</id>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<source>1.7</source>
+							<target>1.7</target>
+							<fork>true</fork>
+							<outputDirectory>${project.build.outputDirectory}_jdk7</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>Java6</id>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<source>1.6</source>
+							<target>1.6</target>
+							<fork>true</fork>
+							<outputDirectory>${project.build.outputDirectory}_jdk6</outputDirectory>
+							<classifier>jdk6</classifier>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${maven-jar-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>Java7</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<classesDirectory>${project.build.outputDirectory}_jdk7</classesDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>Java6</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<classesDirectory>${project.build.outputDirectory}_jdk6</classesDirectory>
+							<classifier>jdk6</classifier>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

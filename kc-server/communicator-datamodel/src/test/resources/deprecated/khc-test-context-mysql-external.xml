@@ -1,0 +1,80 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                    http://www.springframework.org/schema/context 
+        			http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        			http://www.springframework.org/schema/tx 
+  					http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+  					http://www.springframework.org/schema/jdbc 
+            		http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+            		http://www.springframework.org/schema/security
+         			http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<!-- Enable code annotation (@Autowired) -->
+	<context:component-scan base-package="com.kurento.agenda,com.kurento.khc" />
+	<!-- Enable code anotation (@Transactional) -->
+	<tx:annotation-driven transaction-manager="txManager" />
+	<security:global-method-security
+		pre-post-annotations="enabled" />
+
+
+	<!-- Load configuration file -->
+	<bean id="agendaProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<!-- Last found wins. If no file in configuration dir internal is used -->
+				<value>classpath:khcRestClient-test.properties</value>
+			</list>
+		</property>
+		<property name="ignoreResourceNotFound" value="true" />
+	</bean>
+
+	<bean id="configuration" class="com.kurento.khc.utils.Configuration">
+		<property name="properties" ref="agendaProperties" />
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="searchSystemEnvironment" value="true" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+	</bean>
+
+	<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="kurentoagendatest-mysql" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="persistenceXmlLocation"
+			value="classpath:META-INF/agenda-datamodel-persistence.xml" />
+		<property name="jpaDialect">
+			<bean class="com.kurento.jpa.CustomHibernateJpaDialect" />
+		</property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.id.new_generator_mappings">${hibernate.id.new_generator_mappings}</prop>
+				<prop key="hibernate.archive.autodetection">${hibernate.archive.autodetection}</prop>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+				<prop key="hibernate.use_sql_comments">${hibernate.use_sql_comments}</prop>
+				<prop key="hibernate.connection.autocommit">${hibernate.connection.autocommit}</prop>
+				<prop key="hibernate.bytecode.use_reflection_optimizer">${hibernate.bytecode.use_reflection_optimizer}</prop>
+				<prop key="hibernate.connection.driver_class">${hibernate.connection.driver_class}</prop>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- Create hsql embedded datasource for ACL storage -->
+	<bean name="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${kurento.persistence.datasource.driver}" />
+		<property name="url" value="${kurento.persistence.datasource.url}" />
+		<property name="username" value="${kurento.persistence.datasource.username}" />
+		<property name="password" value="${kurento.persistence.datasource.password}" />
+	</bean>
+
+</beans>

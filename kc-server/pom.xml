@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.naevatec.kc</groupId>
+		<artifactId>parent-pom</artifactId>
+		<version>2.4.3-SNAPSHOT</version>
+		<relativePath>../parent-pom</relativePath>
+	</parent>
+	<artifactId>kc-server</artifactId>
+	<packaging>pom</packaging>
+
+	<scm>
+		<url>${kc.scm.url}</url>
+		<connection>scm:git:${kc.scm.connection}</connection>
+		<developerConnection>scm:git:${kc.scm.connection}</developerConnection>
+		<tag>develop</tag>
+	</scm>
+
+	<modules>
+		<module>communicator-pojo</module>
+		<module>communicator-datamodel</module>
+		<module>communicator-rest</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpcore</artifactId>
+				<version>${version.httpcore}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>
+
