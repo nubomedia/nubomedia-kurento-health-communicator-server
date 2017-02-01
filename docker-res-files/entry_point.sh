@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-TOMCAT_PATH="/opt/apache-tomcat-7.0.73"
+TOMCAT_PATH="/opt/apache-tomcat-7.0.75"
 TOMCAT_TIMEOUT=180
 KHC_PATH="/etc/khc"
 
