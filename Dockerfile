@@ -51,11 +51,11 @@ RUN cp /root/docker-res-files/init_db.sh /tmp/init_db.sh
 RUN sudo chmod +x /tmp/init_db.sh
 RUN sudo /tmp/init_db.sh
 
-# ---Tomcat 7.0.75--- 
+# ---Tomcat 7.0.76--- 
 # Download the server distribution file and extract it over the desired directory.
 WORKDIR /opt
-RUN wget http://apache.uvigo.es/tomcat/tomcat-7/v7.0.75/bin/apache-tomcat-7.0.75.zip > /dev/null
-RUN unzip apache-tomcat-7.0.75.zip > /dev/null
+RUN wget http://apache.uvigo.es/tomcat/tomcat-7/v7.0.76/bin/apache-tomcat-7.0.76.zip > /dev/null
+RUN unzip apache-tomcat-7.0.76.zip > /dev/null
 WORKDIR /
 
 # ---Apache2---
@@ -93,7 +93,7 @@ RUN sudo service apache2 restart
 
 # ---KC Server---
 # Copy the kc.war file to Tomcat´s webapps directory.
-RUN sudo cp /root/kc-server/communicator-rest/target/communicator-rest-2.4.3-SNAPSHOT.war /opt/apache-tomcat-7.0.75/webapps/khcrest.war
+RUN sudo cp /root/kc-server/communicator-rest/target/communicator-rest-2.4.3-SNAPSHOT.war /opt/apache-tomcat-7.0.76/webapps/khcrest.war
 
 # Create '/etc/khc' directory.
 RUN sudo mkdir /etc/khc
@@ -110,7 +110,7 @@ RUN sudo mkdir /var/log/khc
 # Modify in khc.properties 'hibernate.hbm2ddl.auto' property to 'update' for generate the database scheme (after the scheme has been created, set this property to # 'validate').
 # Take a special care with the GCM key set in 'kurento.gcm.key' property.
 
-WORKDIR /opt/apache-tomcat-7.0.75
+WORKDIR /opt/apache-tomcat-7.0.76
 RUN sudo chmod +x -R bin/
 
 WORKDIR /
